@@ -1,18 +1,13 @@
 #define LILYGO_TDISPLAY_AMOLED_SERIES
+
 #include "Arduino.h"
 #include "esp_arduino_version.h"
-#if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3,0,0)
-#if defined(LILYGO_TWRITSTBAND_S3)
-#include <LilyGo_Wristband.h> //To use LilyGo Wristband S3, please include <LilyGo_Wristband.h>
-#elif defined(LILYGO_TDISPLAY_AMOLED_SERIES)
-#include <LilyGo_AMOLED.h>      //To use LilyGo AMOLED series screens, please include <LilyGo_AMOLED.h>
-#endif
-#include <TFT_eSPI.h>   //https://github.com/Bodmer/TFT_eSPI
+#include <LilyGo_AMOLED.h>      
+#include <TFT_eSPI.h>   
 #include "true_color.h"
 #include <LV_Helper.h>
 
-TFT_eSPI tft = TFT_eSPI();
-TFT_eSprite spr = TFT_eSprite(&tft);
+// Create a TFT_eSPI object 
 LilyGo_Class amoled;
 
 #define WIDTH  536
@@ -20,6 +15,8 @@ LilyGo_Class amoled;
 #define HEIGHT 240
 //amoled.width()
 #define BUFFER_SIZE WIDTH * HEIGHT
+
+//Red 0xF800 Green 0x07E0 Blue 0x001F
 uint16_t buffer_bmp[BUFFER_SIZE] = {0xF800,0xF800,0xF800, 0x0000,0x0000,0x0000, 0x07E0,0x07E0,0x07E0, 0x0000,0x0000,0x0000, 0x001F,0x001F,0x001F, 0x0000}; //Blue 0x001F
 
 void setup()
@@ -33,10 +30,6 @@ void setup()
             Serial.println("There is a problem with the device!~"); delay(1000);
         }
     }
-
-    spr.createSprite(WIDTH, HEIGHT);
-
-    spr.setSwapBytes(1);
 }
 
 void loop()
@@ -69,4 +62,3 @@ void receiveImage (int length){
     }
 }
 
-#endif
