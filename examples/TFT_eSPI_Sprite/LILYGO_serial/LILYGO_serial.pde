@@ -55,7 +55,7 @@ void draw() {
     mouseY = recordedY;
   }
   Rectangle bounds = new Rectangle(mousex, mouseY, screen_width, screen_height);
-  BufferedImage test = robot.createScreenCapture(bounds);
+  BufferedImage test = rotateImage(robot.createScreenCapture(bounds),0);
   PImage c = new PImage(test);
   image(c, 0, 0);
   //Send 10 times R. to indicate the start of a new frame
@@ -81,12 +81,15 @@ void draw() {
       arduinoPort.write((byte)(value & 0xff));
       arduinoPort.write((byte)((value >> 8) & 0xff));
       
-      //Wait 1ms every 50 pixels to prevent the Arduino from overflowing
-      if ((x+y*screen_width) % 50 == 0) {
-        delay(1);
-      }
+      long startTime = System.nanoTime();
+    int q = 0;
+    int timedelay = 4000;
+    while (System.nanoTime()-startTime < timedelay){
+      q++;
     }
+    
   }
+}
 }
 
 void keyPressed() {
@@ -95,4 +98,33 @@ void keyPressed() {
     recordedX = mousex;
     recordedY = mouseY;
   }
+}
+//https://stackoverflow.com/questions/37758061/rotate-a-buffered-image-in-java
+private static BufferedImage rotateImage(BufferedImage buffImage, double angle) {
+    double radian = Math.toRadians(angle);
+    double sin = Math.abs(Math.sin(radian));
+    double cos = Math.abs(Math.cos(radian));
+
+    int width = buffImage.getWidth();
+    int height = buffImage.getHeight();
+
+    int nWidth = (int) Math.floor((double) width * cos + (double) height * sin);
+    int nHeight = (int) Math.floor((double) height * cos + (double) width * sin);
+
+    BufferedImage rotatedImage = new BufferedImage(
+            nWidth, nHeight, BufferedImage.TYPE_INT_ARGB);
+
+    Graphics2D graphics = rotatedImage.createGraphics();
+
+    graphics.setRenderingHint(
+            RenderingHints.KEY_INTERPOLATION,
+            RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+    graphics.translate((nWidth - width) / 2, (nHeight - height) / 2);
+    // rotation around the center point
+    graphics.rotate(radian, (double) (width / 2), (double) (height / 2));
+    graphics.drawImage(buffImage, 0, 0, null);
+    graphics.dispose();
+
+    return rotatedImage;
 }
