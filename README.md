@@ -1,7 +1,8 @@
 # ESPScreenMirror
 This code is intended to mirror the display on a laptop to a LILYGO AMOLED display
 
-![Picture of the ESP32 devkit showing the same image as the laptop screen](./images/picture_screenshot.jpeg)
+![Picture of the ESP32 devkit showing the same image as the laptop 
+screen](./images/picture_screenshot.jpeg)
 
 
 ## 3️⃣ PlatformIO Quick Start (Recommended)
